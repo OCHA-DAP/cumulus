@@ -8,21 +8,25 @@ azure_container(
   container,
   service = c("blob", "file"),
   stage = c("prod", "dev"),
-  endpoint = Sys.getenv("DSCI_AZ_ENDPOINT"),
+  endpoint_template = Sys.getenv("DSCI_AZ_ENDPOINT"),
   sas_key = Sys.getenv("DSCI_AZ_SAS_DEV")
 )
 }
 \arguments{
 \item{container}{`character` container name in the Azure storage.}
 
-\item{service}{service in the Azure storage to read from, either "blob" (default) or "file"}
+\item{service}{service in the Azure storage to read from, either "blob"
+(default) or "file"}
 
-\item{stage}{Stage in the Azure storage to read from, either "blob" (default) or "file"}
+\item{stage}{Stage in the Azure storage to read from, either "blob" (default)
+or "file"}
 
-\item{endpoint}{`character` endpoint url constructued up with `{stage}` and `{service}` braced
-placeholders which get filled by the `azure_endpoint_url()` function.}
+\item{sas_key}{`character` SAS key. Default set to env var naming convention
+used for hdx-signals}
 
-\item{sas_key}{`character` SAS key. Default set to env var naming convention used for hdx-signals}
+\item{endpoint}{`character` endpoint url constructued up with `{stage}` and
+`{service}` bracedplaceholders which get filled by the
+`azure_endpoint_url()` function.}
 }
 \value{
 blob_container

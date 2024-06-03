@@ -29,7 +29,7 @@
 #' @returns Data frame.
 #'
 #' @export
-#' @example
+#' @examples
 #' read_az_file(
 #'   file_path = "nga-aa-cholera/public/processed/nga-adm2-populations-2023.csv",
 #'   container = "projects"

@@ -2,3 +2,4 @@
 
 export(azure_container)
 export(read_az_file)
+export(write_az_file)
