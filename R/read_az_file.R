@@ -1,8 +1,10 @@
-#' Read a Parquet file stored on Microsoft Azure Data Storage blob or file storage
+#' Read a Parquet file stored on Microsoft Azure Data Storage blob or file
+#' storage
 #'
 #' Reads a file from the Azure Storage
 #' The file is read based on its prefix. Currently, the only support is for
-#' Apache Parquet, GeoJSON, CSV, and XLSX/XLS files, but other support will be added as necessary
+#' Apache Parquet, GeoJSON, CSV, and XLSX/XLS files, but other support will be
+#' added as necessary
 #'
 #' Function parsing is done based on file type:
 #'
@@ -11,33 +13,42 @@
 #' * CSV: [readr::read_csv()]
 #' * XLSX: [readxl::read_excel()]
 #'
-#' @param file_path Name of the file to read, including directory prefixes (`input/` or `output/`)
-#'     and file extension, such as `.parquet`.
-#' @param sheet `character` name of sheet (tab) if file is excel format (.xlsx). If NULL (default) it reads
+#' @param file_path Name of the file to read, including directory prefixes
+#'     (`input/` or `output/`)and file extension, such as `.parquet`.
+#' @param sheet `character` name of sheet (tab) if file is excel format (.xlsx).
+#'     If NULL (default) it reads
 #'     the first tab or ignores sheet argument
 #' @param container `character` container name in the Azure storage.
-#' @param sas_key `character` SAS key. Default set to env var naming convention used for hdx-signals
-#' @param service service in the Azure storage to read from, either "blob" (default) or "file"
-#' @param stage Stage in the Azure storage to read from, either "blob" (default) or "file"
-#'
+#' @param sas_key `character` SAS key. Default set to env var naming convention
+#'     used for hdx-signals
+#' @param service service in the Azure storage to read from, either "blob"
+#'     (default) or "file"
+#' @param stage Stage in the Azure storage to read from, either "blob" (default)
+#'     or "file"
 #'
 #' @returns Data frame.
 #'
 #' @export
+#' @example
+#' read_az_file(
+#'   file_path = "nga-aa-cholera/public/processed/nga-adm2-populations-2023.csv",
+#'   container = "projects"
+#' )
 read_az_file <- function(
     file_path,
     sheet = NULL,
     container,
     sas_key = Sys.getenv("DSCI_AZ_SAS_DEV"),
     service = "blob",
-    stage = "dev"
+    stage = "dev",
+    endpoint_template = Sys.getenv("DSCI_AZ_ENDPOINT")
 ) {
 
   container <- azure_container(
     container = container,
-    service =service,
+    service = service,
     stage = stage,
-    endpoint = endpoint,
+    endpoint_template = endpoint_template,
     sas_key = sas_key
   )
 
@@ -54,26 +65,30 @@ read_az_file <- function(
       )
     )
   )
-
-  switch(
+  ret <- switch(
     fileext,
     parquet = arrow::read_parquet(tf),
     geojson = sf::st_read(tf, quiet = TRUE),
     csv = readr::read_csv(tf, col_types = readr::cols()),
     xlsx = readxl::read_excel(tf, sheet = sheet)
   )
-
+  unlink(tf)
+  ret
 }
 
 
 #' Connect to azure container
 #'
 #' @param container `character` container name in the Azure storage.
-#' @param service service in the Azure storage to read from, either "blob" (default) or "file"
-#' @param stage Stage in the Azure storage to read from, either "blob" (default) or "file"
-#' @param sas_key `character` SAS key. Default set to env var naming convention used for hdx-signals
-#' @param endpoint `character` endpoint url constructued up with `{stage}` and `{service}` braced
-#'     placeholders which get filled by the `azure_endpoint_url()` function.
+#' @param service service in the Azure storage to read from, either "blob"
+#'     (default) or "file"
+#' @param stage Stage in the Azure storage to read from, either "blob" (default)
+#'      or "file"
+#' @param sas_key `character` SAS key. Default set to env var naming convention
+#'     used for hdx-signals
+#' @param endpoint `character` endpoint url constructued up with `{stage}` and
+#'     `{service}` bracedplaceholders which get filled by the
+#'     `azure_endpoint_url()` function.
 #'
 #' @return blob_container
 #' @export
@@ -86,12 +101,16 @@ azure_container <-  function(
     container,
     service = c("blob", "file"),
     stage = c("prod", "dev"),
-    endpoint = Sys.getenv("DSCI_AZ_ENDPOINT"),
+    endpoint_template = Sys.getenv("DSCI_AZ_ENDPOINT"),
     sas_key = Sys.getenv("DSCI_AZ_SAS_DEV")
 ) {
 
   blob_endpoint <- AzureStor::blob_endpoint(
-    endpoint = azure_endpoint_url(service = service, stage = stage),
+    endpoint = azure_endpoint_url(
+      service = service,
+      stage = stage,
+      endpoint_template
+    ),
     sas = sas_key
   )
 
@@ -105,10 +124,10 @@ azure_container <-  function(
 azure_endpoint_url <- function(
     service = c("blob", "file"),
     stage = c("prod", "dev"),
-    endpoint = Sys.getenv("DSCI_AZ_ENDPOINT")
+    endpoint_template = Sys.getenv("DSCI_AZ_ENDPOINT")
 ) {
   service <- rlang::arg_match(service)
   stage <- rlang::arg_match(stage)
-  endpoint <- glue::glue(endpoint)
+  endpoint <- glue::glue(endpoint_template)
   return(endpoint)
 }
