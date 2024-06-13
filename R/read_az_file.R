@@ -36,7 +36,7 @@
 #' )
 read_az_file <- function(
     file_path,
-    sheet = NULL,
+    layer = NULL,
     container,
     sas_key = Sys.getenv("DSCI_AZ_SAS_DEV"),
     service = "blob",
@@ -100,7 +100,7 @@ read_az_file <- function(
 azure_container <-  function(
     container,
     service = c("blob", "file"),
-    stage = c("prod", "dev"),
+    stage = c( "dev","prod"),
     endpoint_template = Sys.getenv("DSCI_AZ_ENDPOINT"),
     sas_key = Sys.getenv("DSCI_AZ_SAS_DEV")
 ) {
