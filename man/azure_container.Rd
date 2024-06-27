@@ -7,7 +7,7 @@
 azure_container(
   container,
   service = c("blob", "file"),
-  stage = c("prod", "dev"),
+  stage = c("dev", "prod"),
   endpoint_template = Sys.getenv("DSCI_AZ_ENDPOINT"),
   sas_key = Sys.getenv("DSCI_AZ_SAS_DEV")
 )

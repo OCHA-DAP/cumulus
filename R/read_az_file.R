@@ -25,6 +25,7 @@
 #'     (default) or "file"
 #' @param stage Stage in the Azure storage to read from, either "blob" (default)
 #'     or "file"
+#' @param geoparquet if not NULL (default) & file extension is .parquet. File will be read in as sf class
 #'
 #' @returns Data frame.
 #'
@@ -41,7 +42,8 @@ read_az_file <- function(
     sas_key = Sys.getenv("DSCI_AZ_SAS_DEV"),
     service = "blob",
     stage = "dev",
-    endpoint_template = Sys.getenv("DSCI_AZ_ENDPOINT")
+    endpoint_template = Sys.getenv("DSCI_AZ_ENDPOINT"),
+    geoparquet = NULL
 ) {
 
   container <- azure_container(
@@ -65,15 +67,27 @@ read_az_file <- function(
       )
     )
   )
+  if(!is.null(geoparquet) && fileext == "parquet"){
+    load_parquet <- read_geoparquet
+  }
+  if(is.null(geoparquet)){
+    load_parquet <- arrow::read_parquet
+  }
+
   ret <- switch(
     fileext,
-    parquet = arrow::read_parquet(tf),
+    parquet = load_parquet(tf),
     geojson = sf::st_read(tf, quiet = TRUE),
     csv = readr::read_csv(tf, col_types = readr::cols()),
     xlsx = readxl::read_excel(tf, sheet = sheet)
   )
   unlink(tf)
   ret
+}
+
+read_geoparquet <-  function(x){
+  arrow::open_dataset(x) |>
+    sf::st_as_sf()
 }
 
 

@@ -7,21 +7,18 @@ storage}
 \usage{
 read_az_file(
   file_path,
-  sheet = NULL,
+  layer = NULL,
   container,
   sas_key = Sys.getenv("DSCI_AZ_SAS_DEV"),
   service = "blob",
   stage = "dev",
-  endpoint_template = Sys.getenv("DSCI_AZ_ENDPOINT")
+  endpoint_template = Sys.getenv("DSCI_AZ_ENDPOINT"),
+  geoparquet = NULL
 )
 }
 \arguments{
 \item{file_path}{Name of the file to read, including directory prefixes
 (`input/` or `output/`)and file extension, such as `.parquet`.}
-
-\item{sheet}{`character` name of sheet (tab) if file is excel format (.xlsx).
-If NULL (default) it reads
-the first tab or ignores sheet argument}
 
 \item{container}{`character` container name in the Azure storage.}
 
@@ -33,6 +30,12 @@ used for hdx-signals}
 
 \item{stage}{Stage in the Azure storage to read from, either "blob" (default)
 or "file"}
+
+\item{geoparquet}{if not NULL (default) & file extension is .parquet. File will be read in as sf class}
+
+\item{sheet}{`character` name of sheet (tab) if file is excel format (.xlsx).
+If NULL (default) it reads
+the first tab or ignores sheet argument}
 }
 \value{
 Data frame.
