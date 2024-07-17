@@ -37,13 +37,13 @@ load_containers <- function(
   stage <- rlang::arg_match(stage)
   storae_account <- rlang::arg_match(storage_account)
 
-  es <- azure_endpoint_url(
+  ep_url <- azure_endpoint_url(
     service = service,
     stage = stage,
     storage_account = storage_account
   )
 
-  se <- AzureStor::storage_endpoint(es, sas = sas_key)
+  se <- AzureStor::storage_endpoint(ep_url, sas = sas_key)
 
   # storage container
 
