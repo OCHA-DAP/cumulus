@@ -27,7 +27,7 @@
 #' @export
 load_containers <- function(
     containers = c("global", "projects"),
-    sas_key = Sys.getenv("DSCI_AZ_SAS_DEV"),
+    sas = Sys.getenv("DSCI_AZ_SAS_DEV"),
     service = c("blob", "file"),
     stage = c("dev", "prod"),
     storage_account = "imb0chd0") {
@@ -37,7 +37,7 @@ load_containers <- function(
     storage_account = storage_account
   )
 
-  se <- AzureStor::storage_endpoint(ep_url, sas = sas_key)
+  se <- AzureStor::storage_endpoint(ep_url, sas = sas)
 
   # storage container
   item_labels <- paste0(toupper(containers), "_CONT")
