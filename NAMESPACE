@@ -2,3 +2,4 @@
 
 export(download_fieldmaps_sf)
 export(download_shapefile)
+export(load_containers)
