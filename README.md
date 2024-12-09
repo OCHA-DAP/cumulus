@@ -27,3 +27,11 @@ library(cumulus)
 ```r
 gdf_adm1 <- download_fieldmaps_sf("som","som_adm1")
 ```
+
+```{r}
+containers <- load_containers()
+AzureStor::list_blobs(
+   container = containers$projects,
+   dir = "ds-contingency-pak-floods"
+ )
+```
