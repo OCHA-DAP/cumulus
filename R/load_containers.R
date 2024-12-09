@@ -31,6 +31,7 @@ load_containers <- function(
     service = c("blob", "file"),
     stage = c("dev", "prod"),
     storage_account = "imb0chd0") {
+
   ep_url <- azure_endpoint_url(
     service = service,
     stage = stage,
@@ -39,9 +40,8 @@ load_containers <- function(
 
   se <- AzureStor::storage_endpoint(ep_url, sas = sas)
 
-  # storage container
-  item_labels <- paste0(toupper(containers), "_CONT")
-  containers <- rlang:::set_names(containers, item_labels)
+
+  containers <- rlang:::set_names(containers, containers)
 
   l_containers <- purrr::map(containers, \(container_name){
     AzureStor::storage_container(se, container_name)
