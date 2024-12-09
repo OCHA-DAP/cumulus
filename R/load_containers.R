@@ -2,70 +2,57 @@
 #'
 #' Create endpoint URL to access Azure blob or file storage on either the
 #' `dev` or `prod` stage from specified storage account
-#' @param containers `character` vector containing the name of container to
-#'     load (default, "global", "projects")
-#' @param sas_key Shared access signature key to access the storage account or
+#' @param stage Store to access, either `prod` (default) or `dev`. `dev`
+#' @param sas Shared access signature key to access the storage account or
 #'    blob. Default is set to use  dev stage sas key via an a env var named
 #'    "DSCI_AZ_SAS_DEV"
 #' @param service Service to access, either `blob` (default) or `file.`
-#' @param stage Store to access, either `prod` (default) or `dev`. `dev`
-#' @param storage_account Storage account to access. Default is `imb0chd0`
 #' @examples
 #' # load project containers
-#' pc <- load_containers(containers = "projects")
+#' containers <- load_containers()
 #' AzureStor::list_blobs(
-#'   container = pc$PROJECTS_CONT,
+#'   container = containers$projects,
 #'   dir = "ds-contingency-pak-floods"
 #' )
 #'
 #' # You can also list as many containers as you want.
-#' pc <- load_containers(containers = c("global", "projects"))
+#' containers = load_containers()
+#'
 #' AzureStor::list_blobs(
-#'   container = pc$GLOBAL_CONT,
+#'   container = containers$global,
 #'   dir = "raster/cogs"
 #' )
 #' @export
 load_containers <- function(
-    containers = c("global", "projects"),
-    sas = Sys.getenv("DSCI_AZ_SAS_DEV"),
-    service = c("blob", "file"),
     stage = c("dev", "prod"),
-    storage_account = "imb0chd0") {
+    sas = Sys.getenv("DSCI_AZ_SAS_DEV"),
+    service = c("blob", "file")
+    ) {
 
   ep_url <- azure_endpoint_url(
-    service = service,
     stage = stage,
-    storage_account = storage_account
+    service = service
   )
+  be <- AzureStor::blob_endpoint(ep_url, sas = sas)
 
-  se <- AzureStor::storage_endpoint(ep_url, sas = sas)
-
-
-  containers <- rlang:::set_names(containers, containers)
-
-  l_containers <- purrr::map(containers, \(container_name){
-    AzureStor::storage_container(se, container_name)
-  })
-
-  l_containers
+  AzureStor::list_blob_containers(be)
 }
 
 #' Create the endpoint URL
 #'
 #' Create endpoint URL to access Azure blob or file storage on either the
-#' `dev` or `prod` stage from specified storage account
-#'
-#' @param service Service to access, either `blob` (default) or `file.`
+#' `dev` or `prod` stage from specified storage accountd
 #' @param stage Store to access, either `prod` (default) or `dev`. `dev`
-#' @param storage_account Storage account to access. Default is `imb0chd0`
+#' @param service Service to access, either `blob` (default) or `file.`
 azure_endpoint_url <- function(
-    service = c("blob", "file"),
     stage = c("dev", "prod"),
-    storage_account = "imb0chd0") {
-  blob_url <- "https://{storage_account}{stage}.{service}.core.windows.net/"
-  service <- rlang::arg_match(service)
+    service = c("blob", "file")
+    ) {
   stage <- rlang::arg_match(stage)
-  storae_account <- rlang::arg_match(storage_account)
+  service <- rlang::arg_match(service)
+  blob_url <- "https://imb0chd0{stage}.{service}.core.windows.net/"
   endpoint <- glue::glue(blob_url)
   return(endpoint)
 }
+
+

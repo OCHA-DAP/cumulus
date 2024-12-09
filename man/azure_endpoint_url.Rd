@@ -4,20 +4,14 @@
 \alias{azure_endpoint_url}
 \title{Create the endpoint URL}
 \usage{
-azure_endpoint_url(
-  service = c("blob", "file"),
-  stage = c("dev", "prod"),
-  storage_account = "imb0chd0"
-)
+azure_endpoint_url(stage = c("dev", "prod"), service = c("blob", "file"))
 }
 \arguments{
-\item{service}{Service to access, either `blob` (default) or `file.`}
-
 \item{stage}{Store to access, either `prod` (default) or `dev`. `dev`}
 
-\item{storage_account}{Storage account to access. Default is `imb0chd0`}
+\item{service}{Service to access, either `blob` (default) or `file.`}
 }
 \description{
 Create endpoint URL to access Azure blob or file storage on either the
-`dev` or `prod` stage from specified storage account
+`dev` or `prod` stage from specified storage accountd
 }

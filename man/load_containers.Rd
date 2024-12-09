@@ -5,26 +5,19 @@
 \title{Return blob container}
 \usage{
 load_containers(
-  containers = c("global", "projects"),
-  sas = Sys.getenv("DSCI_AZ_SAS_DEV"),
-  service = c("blob", "file"),
   stage = c("dev", "prod"),
-  storage_account = "imb0chd0"
+  sas = Sys.getenv("DSCI_AZ_SAS_DEV"),
+  service = c("blob", "file")
 )
 }
 \arguments{
-\item{containers}{`character` vector containing the name of container to
-load (default, "global", "projects")}
-
-\item{service}{Service to access, either `blob` (default) or `file.`}
-
 \item{stage}{Store to access, either `prod` (default) or `dev`. `dev`}
 
-\item{storage_account}{Storage account to access. Default is `imb0chd0`}
-
-\item{sas_key}{Shared access signature key to access the storage account or
+\item{sas}{Shared access signature key to access the storage account or
 blob. Default is set to use  dev stage sas key via an a env var named
 "DSCI_AZ_SAS_DEV"}
+
+\item{service}{Service to access, either `blob` (default) or `file.`}
 }
 \description{
 Create endpoint URL to access Azure blob or file storage on either the
@@ -32,16 +25,17 @@ Create endpoint URL to access Azure blob or file storage on either the
 }
 \examples{
 # load project containers
-pc <- load_containers(containers = "projects")
+containers <- load_containers()
 AzureStor::list_blobs(
-  container = pc$PROJECTS_CONT,
+  container = containers$projects,
   dir = "ds-contingency-pak-floods"
 )
 
 # You can also list as many containers as you want.
-pc <- load_containers(containers = c("global", "projects"))
+containers = load_containers()
+
 AzureStor::list_blobs(
-  container = pc$GLOBAL_CONT,
+  container = containers$global,
   dir = "raster/cogs"
 )
 }
