@@ -6,7 +6,7 @@
 \usage{
 blob_containers(
   stage = c("dev", "prod"),
-  sas = Sys.getenv("DSCI_AZ_SAS_DEV"),
+  sas = NULL,
   service = c("blob", "file")
 )
 }
@@ -14,8 +14,8 @@ blob_containers(
 \item{stage}{Store to access, either `prod` (default) or `dev`. `dev`}
 
 \item{sas}{Shared access signature key to access the storage account or
-blob. Default is set to use  dev stage sas key via an a env var named
-"DSCI_AZ_SAS_DEV"}
+blob (defaults to NULL) and is automatically set based on stage based on
+our current SAS key nomenclature}
 
 \item{service}{Service to access, either `blob` (default) or `file.`}
 }

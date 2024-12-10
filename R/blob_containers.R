@@ -4,8 +4,8 @@
 #' `dev` or `prod` stage from specified storage account
 #' @param stage Store to access, either `prod` (default) or `dev`. `dev`
 #' @param sas Shared access signature key to access the storage account or
-#'    blob. Default is set to use  dev stage sas key via an a env var named
-#'    "DSCI_AZ_SAS_DEV"
+#'    blob (defaults to NULL) and is automatically set based on stage based on
+#'    our current SAS key nomenclature
 #' @param service Service to access, either `blob` (default) or `file.`
 #' @examples
 #' # load project containers
@@ -25,14 +25,19 @@
 #' @export
 blob_containers <- function(
     stage = c("dev", "prod"),
-    sas = Sys.getenv("DSCI_AZ_SAS_DEV"),
+    sas =NULL,
     service = c("blob", "file")
     ) {
+  stage <- rlang::arg_match(stage)
 
+  if(is.null(sas)){
+    sas <- get_sas_key(stage)
+  }
   ep_url <- azure_endpoint_url(
     stage = stage,
     service = service
   )
+
   be <- AzureStor::blob_endpoint(ep_url, sas = sas)
 
   AzureStor::list_blob_containers(be)
@@ -56,3 +61,19 @@ azure_endpoint_url <- function(
 }
 
 
+#' get_sas_key
+#' Convenience function get SAS key based on stage.
+#' TODO: will eventually creat some credential registration step to make this
+#' more flexible, but this will work well internally for now
+#' @param stage Store to access, either `prod` (default) or `dev`. `dev`
+#'
+#' @return
+#'
+#' @examples
+get_sas_key <-  function(stage){
+  switch(
+    stage,
+    dev = Sys.getenv("DSCI_AZ_SAS_DEV"),
+    prod = Sys.getenv("DSCI_AZ_SAS_PROD")
+  )
+}
