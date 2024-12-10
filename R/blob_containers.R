@@ -1,4 +1,4 @@
-#' Return blob container
+#' Return blob containers
 #'
 #' Create endpoint URL to access Azure blob or file storage on either the
 #' `dev` or `prod` stage from specified storage account
@@ -9,21 +9,21 @@
 #' @param service Service to access, either `blob` (default) or `file.`
 #' @examples
 #' # load project containers
-#' containers <- load_containers()
+#' containers <- blob_containers()
 #' AzureStor::list_blobs(
 #'   container = containers$projects,
 #'   dir = "ds-contingency-pak-floods"
 #' )
 #'
 #' # You can also list as many containers as you want.
-#' containers = load_containers()
+#' containers = blob_containers()
 #'
 #' AzureStor::list_blobs(
 #'   container = containers$global,
 #'   dir = "raster/cogs"
 #' )
 #' @export
-load_containers <- function(
+blob_containers <- function(
     stage = c("dev", "prod"),
     sas = Sys.getenv("DSCI_AZ_SAS_DEV"),
     service = c("blob", "file")
