@@ -4,13 +4,13 @@
 \alias{blob_read}
 \title{Read a Parquet file stored in Microsoft Azure Data Storage container}
 \usage{
-blob_read(name, stage = c("prod", "dev"), container)
+blob_read(name, stage = c("prod", "dev"), container = "projects")
 }
 \arguments{
 \item{name}{Name of the file to read, including directory prefixes (`input/` or `output/`)
 and file extension, such as `.parquet`.}
 
-\item{container}{Container in the Azure storage to read from, either `prod`, `dev`, or `wfp`.}
+\item{container}{Container name (`character`) or actual container class object to read from, either `prod`, `dev`, or `wfp`.}
 }
 \value{
 Data frame.
@@ -30,6 +30,6 @@ Function parsing is done based on file type:
 * JSON: [jsonlite::read_json()]
 }
 \examples{
-df <- blob_read(name = "ds-aa-afg-drought/raw/vector/wfp-chirps-adm2.csv",stage= "dev", container = "projects" )
+df <- blob_read(name = "ds-aa-afg-drought/raw/vector/wfp-chirps-adm2.csv", stage = "dev", container = "projects")
 
 }

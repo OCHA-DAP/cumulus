@@ -32,7 +32,7 @@ AzureStor::list_blobs(
 )
 
 # You can also list as many containers as you want.
-containers = blob_containers()
+containers <- blob_containers()
 
 AzureStor::list_blobs(
   container = containers$global,

@@ -14,16 +14,19 @@
 #'
 #' @param name Name of the file to read, including directory prefixes (`input/` or `output/`)
 #'     and file extension, such as `.parquet`.
-#' @param container Container in the Azure storage to read from, either `prod`, `dev`, or `wfp`.
+#' @param container Container name (`character`) or actual container class object to read from, either `prod`, `dev`, or `wfp`.
 #'
 #' @returns Data frame.
 #' @examples
 #' df <- blob_read(name = "ds-aa-afg-drought/raw/vector/wfp-chirps-adm2.csv", stage = "dev", container = "projects")
 #'
 #' @export
-blob_read <- function(name, stage = c("prod", "dev"), container) {
+blob_read <- function(name, stage = c("prod", "dev"), container="projects") {
   stage <- rlang::arg_match(stage)
-  container <- blob_containers(stage = stage)[[container]]
+  if(inherits(container, "character")){
+    container <- blob_containers(stage = stage)[[container]]
+  }
+
   fileext <- tools::file_ext(name)
   tf <- tempfile(fileext = paste0(".", fileext))
 
