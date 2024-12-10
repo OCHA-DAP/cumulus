@@ -16,7 +16,7 @@
 #' )
 #'
 #' # You can also list as many containers as you want.
-#' containers = blob_containers()
+#' containers <- blob_containers()
 #'
 #' AzureStor::list_blobs(
 #'   container = containers$global,
@@ -25,12 +25,11 @@
 #' @export
 blob_containers <- function(
     stage = c("dev", "prod"),
-    sas =NULL,
-    service = c("blob", "file")
-    ) {
+    sas = NULL,
+    service = c("blob", "file")) {
   stage <- rlang::arg_match(stage)
 
-  if(is.null(sas)){
+  if (is.null(sas)) {
     sas <- get_sas_key(stage)
   }
   ep_url <- azure_endpoint_url(
@@ -51,8 +50,7 @@ blob_containers <- function(
 #' @param service Service to access, either `blob` (default) or `file.`
 azure_endpoint_url <- function(
     stage = c("dev", "prod"),
-    service = c("blob", "file")
-    ) {
+    service = c("blob", "file")) {
   stage <- rlang::arg_match(stage)
   service <- rlang::arg_match(service)
   blob_url <- "https://imb0chd0{stage}.{service}.core.windows.net/"
@@ -70,9 +68,8 @@ azure_endpoint_url <- function(
 #' @return
 #'
 #' @examples
-get_sas_key <-  function(stage){
-  switch(
-    stage,
+get_sas_key <- function(stage) {
+  switch(stage,
     dev = Sys.getenv("DSCI_AZ_SAS_DEV"),
     prod = Sys.getenv("DSCI_AZ_SAS_PROD")
   )

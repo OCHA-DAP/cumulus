@@ -5,11 +5,11 @@
 #'
 #' @param iso3 ISO3 code
 #' @export
-download_fieldmaps_sf <- function(iso3,layer) {
+download_fieldmaps_sf <- function(iso3, layer) {
   iso3 <- tolower(iso3)
   download_shapefile(
     url = glue::glue("https://data.fieldmaps.io/cod/originals/{iso3}.gpkg.zip"),
-    layer= layer
+    layer = layer
   )
 }
 
@@ -56,7 +56,7 @@ download_shapefile <- function(url, layer = NULL) {
 
   if (!is.null(layer)) {
     purrr::map(
-      purrr::set_names(layer,layer),
+      purrr::set_names(layer, layer),
       \(lyr_tmp) {
         sf::st_read(
           fn,

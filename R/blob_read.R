@@ -18,12 +18,12 @@
 #'
 #' @returns Data frame.
 #' @examples
-#' df <- blob_read(name = "ds-aa-afg-drought/raw/vector/wfp-chirps-adm2.csv",stage= "dev", container = "projects" )
+#' df <- blob_read(name = "ds-aa-afg-drought/raw/vector/wfp-chirps-adm2.csv", stage = "dev", container = "projects")
 #'
 #' @export
 blob_read <- function(name, stage = c("prod", "dev"), container) {
   stage <- rlang::arg_match(stage)
-  container<- blob_containers(stage=stage)[[container]]
+  container <- blob_containers(stage = stage)[[container]]
   fileext <- tools::file_ext(name)
   tf <- tempfile(fileext = paste0(".", fileext))
 
@@ -39,11 +39,11 @@ blob_read <- function(name, stage = c("prod", "dev"), container) {
   )
 
   switch(fileext,
-         parquet = arrow::read_parquet(tf),
-         geojson = sf::st_read(tf, quiet = TRUE),
-         json = dplyr::as_tibble(jsonlite::read_json(tf, simplifyVector = TRUE)),
-         csv = readr::read_csv(tf, col_types = readr::cols(), guess_max = 10000),
-         xls = readxl::read_xls(tf, col_types = "guess"),
-         xlsx = readxl::read_xlsx(tf, col_types = "guess")
+    parquet = arrow::read_parquet(tf),
+    geojson = sf::st_read(tf, quiet = TRUE),
+    json = dplyr::as_tibble(jsonlite::read_json(tf, simplifyVector = TRUE)),
+    csv = readr::read_csv(tf, col_types = readr::cols(), guess_max = 10000),
+    xls = readxl::read_xls(tf, col_types = "guess"),
+    xlsx = readxl::read_xlsx(tf, col_types = "guess")
   )
 }
