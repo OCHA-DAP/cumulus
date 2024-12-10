@@ -35,3 +35,11 @@ AzureStor::list_blobs(
    dir = "ds-contingency-pak-floods"
  )
 ```
+
+With convenience access to containers above could easily use `{AzureStor}` for flexible reading/downloading of files, but we've provided some convenient wrappers 
+for reading some basic file types
+
+```{r}
+df <-blob_read(name = "ds-aa-eth-drought/exploration/eth_admpop_2023.xlsx", container = "projects",stage= "dev")
+```
+
