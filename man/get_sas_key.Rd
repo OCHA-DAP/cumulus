@@ -12,6 +12,9 @@ get_sas_key(stage)
 \arguments{
 \item{stage}{Store to access, either `prod` (default) or `dev`. `dev`}
 }
+\value{
+SAS key based on stage
+}
 \description{
 get_sas_key
 Convenience function get SAS key based on stage.

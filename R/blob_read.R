@@ -14,7 +14,7 @@
 #'
 #' @param name Name of the file to read, including directory prefixes (`input/` or `output/`)
 #'     and file extension, such as `.parquet`.
-#' @param container Container name (`character`) or actual container class object to read from, either `prod`, `dev`, or `wfp`.
+#' @param container Container name (`character`) or actual container class object to read from
 #'
 #' @returns Data frame.
 #' @examples

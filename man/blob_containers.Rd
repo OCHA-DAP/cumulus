@@ -19,6 +19,9 @@ our current SAS key nomenclature}
 
 \item{service}{Service to access, either `blob` (default) or `file.`}
 }
+\value{
+list of blob container class objects
+}
 \description{
 Create endpoint URL to access Azure blob or file storage on either the
 `dev` or `prod` stage from specified storage account

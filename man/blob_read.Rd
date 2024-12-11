@@ -10,7 +10,7 @@ blob_read(name, stage = c("prod", "dev"), container = "projects")
 \item{name}{Name of the file to read, including directory prefixes (`input/` or `output/`)
 and file extension, such as `.parquet`.}
 
-\item{container}{Container name (`character`) or actual container class object to read from, either `prod`, `dev`, or `wfp`.}
+\item{container}{Container name (`character`) or actual container class object to read from}
 }
 \value{
 Data frame.

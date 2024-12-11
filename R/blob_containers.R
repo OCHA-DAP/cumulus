@@ -7,6 +7,7 @@
 #'    blob (defaults to NULL) and is automatically set based on stage based on
 #'    our current SAS key nomenclature
 #' @param service Service to access, either `blob` (default) or `file.`
+#' @return list of blob container class objects
 #' @examples
 #' # load project containers
 #' containers <- blob_containers()
@@ -65,9 +66,8 @@ azure_endpoint_url <- function(
 #' more flexible, but this will work well internally for now
 #' @param stage Store to access, either `prod` (default) or `dev`. `dev`
 #'
-#' @return
-#'
-#' @examples
+#' @return SAS key based on stage
+
 get_sas_key <- function(stage) {
   switch(stage,
     dev = Sys.getenv("DSCI_AZ_SAS_DEV"),
