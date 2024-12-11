@@ -40,6 +40,8 @@ With convenience access to containers above could easily use `{AzureStor}` for f
 for reading some basic file types
 
 ```{r}
-df <-blob_read(name = "ds-aa-eth-drought/exploration/eth_admpop_2023.xlsx", container = "projects",stage= "dev")
+df <- blob_read(name = "ds-aa-eth-drought/exploration/eth_admpop_2023.xlsx", container = "projects",stage= "dev")
 ```
+
+`blob_write()` is now available and works almost exactly as `blob_read()`. Will add an example soon.
 
