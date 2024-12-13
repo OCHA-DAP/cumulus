@@ -4,7 +4,13 @@
 \alias{blob_write}
 \title{Write data frame to Microsoft Azure Data Storage container}
 \usage{
-blob_write(df, name, stage = c("dev", "prod"), container = "projects")
+blob_write(
+  df,
+  name,
+  stage = c("dev", "prod"),
+  container = "projects",
+  progress_show = TRUE
+)
 }
 \arguments{
 \item{df}{Data frame or simple features to save out.}
@@ -15,6 +21,8 @@ and filetype `.parquet`.}
 \item{stage}{Store to access, either `dev` (default) or `prod`.}
 
 \item{container}{Container name (`character`) or actual container class object to read from}
+
+\item{progress_show}{show progress bar (`logical`) (default = TRUE)}
 }
 \value{
 Nothing, but file is written to selected container
@@ -32,6 +40,4 @@ Files written out based on file type:
 * CSV: [readr::write_csv()]
 * GeoJSON: [sf::st_write()]
 * JSON: [jsonlite::write_json()]
-
-If `hs_local()`, the file is not uploaded to the container.
 }

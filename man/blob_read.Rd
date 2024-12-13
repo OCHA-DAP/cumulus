@@ -4,13 +4,22 @@
 \alias{blob_read}
 \title{Read a Parquet file stored in Microsoft Azure Data Storage container}
 \usage{
-blob_read(name, stage = c("prod", "dev"), container = "projects")
+blob_read(
+  name,
+  stage = c("dev", "prod"),
+  container = "projects",
+  progress_show = TRUE
+)
 }
 \arguments{
 \item{name}{Name of the file to read, including directory prefixes (`input/` or `output/`)
 and file extension, such as `.parquet`.}
 
+\item{stage}{Store to access, either `dev` (default) or `prod`.}
+
 \item{container}{Container name (`character`) or actual container class object to read from}
+
+\item{progress_show}{show progress bar (`logical`) (default = TRUE)}
 }
 \value{
 Data frame.
@@ -30,6 +39,10 @@ Function parsing is done based on file type:
 * JSON: [jsonlite::read_json()]
 }
 \examples{
-df <- blob_read(name = "ds-aa-afg-drought/raw/vector/wfp-chirps-adm2.csv", stage = "dev", container = "projects")
+df <- blob_read(name = "ds-aa-eth-drought/exploration/eth_admpop_2023.xlsx",
+                stage = "dev",
+                container = "projects",
+                progress_show = TRUE
+                )
 
 }
