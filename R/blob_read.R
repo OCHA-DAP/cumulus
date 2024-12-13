@@ -14,14 +14,20 @@
 #'
 #' @param name Name of the file to read, including directory prefixes (`input/` or `output/`)
 #'     and file extension, such as `.parquet`.
+#' @param stage Store to access, either `dev` (default) or `prod`.
 #' @param container Container name (`character`) or actual container class object to read from
+#' @param progress_show show progress bar (`logical`) (default = TRUE)
 #'
 #' @returns Data frame.
 #' @examples
-#' df <- blob_read(name = "ds-aa-afg-drought/raw/vector/wfp-chirps-adm2.csv", stage = "dev", container = "projects")
+#' df <- blob_read(name = "ds-aa-eth-drought/exploration/eth_admpop_2023.xlsx",
+#'                 stage = "dev",
+#'                 container = "projects",
+#'                 progress_show = TRUE
+#'                 )
 #'
 #' @export
-blob_read <- function(name, stage = c("prod", "dev"), container="projects") {
+blob_read <- function(name, stage = c("dev", "prod"), container="projects", progress_show = TRUE) {
   stage <- rlang::arg_match(stage)
   if(inherits(container, "character")){
     container <- blob_containers(stage = stage)[[container]]
@@ -30,23 +36,23 @@ blob_read <- function(name, stage = c("prod", "dev"), container="projects") {
   fileext <- tools::file_ext(name)
   tf <- tempfile(fileext = paste0(".", fileext))
 
-  # wrapping to suppress printing of progress bar
-  invisible(
-    utils::capture.output(
-      AzureStor::download_blob(
-        container = container,
-        src = name,
-        dest = tf
-      )
-    )
+  opts <- options(azure_storage_progress_bar = progress_show)
+  on.exit(options(opts))
+
+  AzureStor::download_blob(
+    container = container,
+    src = name,
+    dest = tf
   )
 
-  switch(fileext,
-    parquet = arrow::read_parquet(tf),
-    geojson = sf::st_read(tf, quiet = TRUE),
-    json = dplyr::as_tibble(jsonlite::read_json(tf, simplifyVector = TRUE)),
-    csv = readr::read_csv(tf, col_types = readr::cols(), guess_max = 10000),
-    xls = readxl::read_xls(tf, col_types = "guess"),
-    xlsx = readxl::read_xlsx(tf, col_types = "guess")
-  )
-}
+
+
+    switch(fileext,
+           parquet = arrow::read_parquet(tf),
+           geojson = sf::st_read(tf, quiet = TRUE),
+           json = dplyr::as_tibble(jsonlite::read_json(tf, simplifyVector = TRUE)),
+           csv = readr::read_csv(tf, col_types = readr::cols(), guess_max = 10000),
+           xls = readxl::read_xls(tf, col_types = "guess"),
+           xlsx = readxl::read_xlsx(tf, col_types = "guess")
+    )
+    }
