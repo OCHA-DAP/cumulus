@@ -47,12 +47,12 @@ blob_read <- function(name, stage = c("dev", "prod"), container="projects", prog
 
 
 
-    switch(fileext,
-           parquet = arrow::read_parquet(tf),
-           geojson = sf::st_read(tf, quiet = TRUE),
-           json = dplyr::as_tibble(jsonlite::read_json(tf, simplifyVector = TRUE)),
-           csv = readr::read_csv(tf, col_types = readr::cols(), guess_max = 10000),
-           xls = readxl::read_xls(tf, col_types = "guess"),
-           xlsx = readxl::read_xlsx(tf, col_types = "guess")
-    )
-    }
+  switch(fileext,
+         parquet = arrow::read_parquet(tf),
+         geojson = sf::st_read(tf, quiet = TRUE),
+         json = dplyr::as_tibble(jsonlite::read_json(tf, simplifyVector = TRUE)),
+         csv = readr::read_csv(tf, col_types = readr::cols(), guess_max = 10000),
+         xls = readxl::read_xls(tf, col_types = "guess"),
+         xlsx = readxl::read_xlsx(tf, col_types = "guess")
+  )
+}

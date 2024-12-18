@@ -65,12 +65,26 @@ azure_endpoint_url <- function(
 #' TODO: will eventually creat some credential registration step to make this
 #' more flexible, but this will work well internally for now
 #' @param stage Store to access, either `prod` (default) or `dev`. `dev`
-#'
+#' @param key_syntax_v `integer` indicating which version of key env var naming
+#'   to use. Default is set to 2 (this is a bit of hack for now)
+#
+#
+
 #' @return SAS key based on stage
 
-get_sas_key <- function(stage) {
-  switch(stage,
-    dev = Sys.getenv("DSCI_AZ_SAS_DEV"),
-    prod = Sys.getenv("DSCI_AZ_SAS_PROD")
-  )
+get_sas_key <- function(stage,key_syntax_v = 2) {
+  if(key_syntax_v == 1){
+    key <- switch(stage,
+      dev = Sys.getenv("DSCI_AZ_SAS_DEV"),
+      prod = Sys.getenv("DSCI_AZ_SAS_PROD")
+    )
+  }
+  if(key_syntax_v==2){
+   key <-  switch(stage,
+           dev = Sys.getenv("DS_AZ_BLOB_DEV_SAS"),
+           prod = Sys.getenv("DS_AZ_BLOB_PROD_SAS_WRITE")
+    )
+  }
+  return(key)
+
 }
