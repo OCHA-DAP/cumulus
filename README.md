@@ -15,7 +15,7 @@ You can install the development version of cumulus from [GitHub](https://github.
 devtools::install_github("OCHA-DAP/cumulus")
 ```
 
-## Example
+## Examples
 
 This is a basic example which shows you how to solve a common problem:
 
@@ -24,9 +24,7 @@ library(cumulus)
 ## basic example code
 ```
 
-```r
-gdf_adm1 <- download_fieldmaps_sf("som","som_adm1")
-```
+## Blob
 
 ```{r}
 containers <- blob_containers()
@@ -44,4 +42,24 @@ df <- blob_read(name = "ds-aa-eth-drought/exploration/eth_admpop_2023.xlsx", con
 ```
 
 `blob_write()` is now available and works almost exactly as `blob_read()`. Will add an example soon.
+
+
+## Postgres
+
+connect to prod postgres db
+
+```{r}
+con_prod <- pg_con(stage = "prod")
+```
+
+```{r}
+con_dev <- pg_con(stage = "dev")
+```
+
+## Random utility
+
+- fieldmaps
+```r
+gdf_adm1 <- download_fieldmaps_sf("som","som_adm1")
+```
 
