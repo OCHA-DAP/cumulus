@@ -63,3 +63,8 @@ con_dev <- pg_con(stage = "dev")
 gdf_adm1 <- download_fieldmaps_sf("som","som_adm1")
 ```
 
+- ENSO/ONI
+
+```{r}
+df_oni <- load_oni()
+```
