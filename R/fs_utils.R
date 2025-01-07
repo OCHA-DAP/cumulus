@@ -55,7 +55,7 @@ blob_fs_check_dates <-  function(stage=c("dev","prod"), start_date="1998-01-01",
   catalogue <- blob_floodscan_catalogue(stage= stage)
   df_missing <- catalogue |>
     dplyr::filter(
-      !date %in% full_date_seq
+      !any(full_date_seq %in% date)
     )
 
   if(nrow(df_missing)==0){
