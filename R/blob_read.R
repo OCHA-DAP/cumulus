@@ -56,3 +56,23 @@ blob_read <- function(name, stage = c("dev", "prod"), container="projects", prog
          xlsx = readxl::read_xlsx(tf, col_types = "guess")
   )
 }
+
+# will add some utility funcs to read in very specific files that are global
+# in scope.
+
+#' blob_load_admin_lookup
+#'
+#' @returns data.frame containing admin lookup data contained in parquet file
+#' @export
+#'
+#' @examples
+#' library(cumulus)
+#' blob_load_admin_lookup()
+blob_load_admin_lookup <- function(){
+  blob_read(
+    name = "admin_lookup.parquet",
+    stage = "dev",
+    container = "polygon"
+  )
+}
+
