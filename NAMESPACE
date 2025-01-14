@@ -3,6 +3,7 @@
 export(blob_containers)
 export(blob_floodscan_catalogue)
 export(blob_fs_check_dates)
+export(blob_load_admin_lookup)
 export(blob_read)
 export(blob_write)
 export(download_fieldmaps_sf)
