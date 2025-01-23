@@ -2,7 +2,7 @@
 % Please edit documentation in R/seas5.R
 \name{pg_load_seas5_historical}
 \alias{pg_load_seas5_historical}
-\title{load_sea5_historical}
+\title{pg_load_sea5_historical}
 \usage{
 pg_load_seas5_historical(
   con = NULL,
@@ -25,8 +25,11 @@ connect to main by default}
 \item{convert_units}{`logical` should we convert from m/s to mm/month
 default = TRUE}
 }
+\value{
+data.frame with historical seas5 forecast
+}
 \description{
-load_sea5_historical
+pg_load_sea5_historical
 }
 \examples{
 library(cumulus)
