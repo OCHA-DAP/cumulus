@@ -17,6 +17,13 @@
 #' @param stage Store to access, either `dev` (default) or `prod`.
 #' @param container Container name (`character`) or actual container class object to read from
 #' @param progress_show show progress bar (`logical`) (default = TRUE)
+#' @param ... Additional arguments passed to the respective reader functions:
+#'   - For `.parquet` files: Passed to `arrow::read_parquet()`.
+#'   - For `.geojson` files: Passed to `sf::st_read()`.
+#'   - For `.json` files: Passed to `jsonlite::read_json()`.
+#'   - For `.csv` files: Passed to `readr::read_csv()`.
+#'   - For `.xls` files: Passed to `readxl::read_xls()`.
+#'   - For `.xlsx` files: Passed to `readxl::read_xlsx()`.
 #'
 #' @returns Data frame.
 #' @examples
@@ -27,7 +34,7 @@
 #'                 )
 #'
 #' @export
-blob_read <- function(name, stage = c("dev", "prod"), container="projects", progress_show = TRUE) {
+blob_read <- function(name, stage = c("dev", "prod"), container="projects", progress_show = TRUE, ...) {
   stage <- rlang::arg_match(stage)
   if(inherits(container, "character")){
     container <- blob_containers(stage = stage)[[container]]
@@ -48,12 +55,12 @@ blob_read <- function(name, stage = c("dev", "prod"), container="projects", prog
 
 
   switch(fileext,
-         parquet = arrow::read_parquet(tf),
-         geojson = sf::st_read(tf, quiet = TRUE),
-         json = dplyr::as_tibble(jsonlite::read_json(tf, simplifyVector = TRUE)),
-         csv = readr::read_csv(tf, col_types = readr::cols(), guess_max = 10000),
-         xls = readxl::read_xls(tf, col_types = "guess"),
-         xlsx = readxl::read_xlsx(tf, col_types = "guess")
+         parquet = arrow::read_parquet(tf, ...),
+         geojson = sf::st_read(tf, quiet = TRUE,....),
+         json = dplyr::as_tibble(jsonlite::read_json(tf, simplifyVector = TRUE),..),
+         csv = readr::read_csv(tf, col_types = readr::cols(), guess_max = 10000,...),
+         xls = readxl::read_xls(tf, col_types = "guess",...),
+         xlsx = readxl::read_xlsx(tf, col_types = "guess", ...)
   )
 }
 

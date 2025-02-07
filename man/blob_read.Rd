@@ -8,7 +8,8 @@ blob_read(
   name,
   stage = c("dev", "prod"),
   container = "projects",
-  progress_show = TRUE
+  progress_show = TRUE,
+  ...
 )
 }
 \arguments{
@@ -20,6 +21,14 @@ and file extension, such as `.parquet`.}
 \item{container}{Container name (`character`) or actual container class object to read from}
 
 \item{progress_show}{show progress bar (`logical`) (default = TRUE)}
+
+\item{...}{Additional arguments passed to the respective reader functions:
+- For `.parquet` files: Passed to `arrow::read_parquet()`.
+- For `.geojson` files: Passed to `sf::st_read()`.
+- For `.json` files: Passed to `jsonlite::read_json()`.
+- For `.csv` files: Passed to `readr::read_csv()`.
+- For `.xls` files: Passed to `readxl::read_xls()`.
+- For `.xlsx` files: Passed to `readxl::read_xlsx()`.}
 }
 \value{
 Data frame.
