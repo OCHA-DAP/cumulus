@@ -9,18 +9,23 @@ blob_read(
   stage = c("dev", "prod"),
   container = "projects",
   progress_show = TRUE,
+  return_path_only = FALSE,
   ...
 )
 }
 \arguments{
-\item{name}{Name of the file to read, including directory prefixes (`input/` or `output/`)
-and file extension, such as `.parquet`.}
+\item{name}{Name of the file to read, including directory prefixes
+(`input/` or `output/`) and file extension, such as `.parquet`.}
 
 \item{stage}{Store to access, either `dev` (default) or `prod`.}
 
-\item{container}{Container name (`character`) or actual container class object to read from}
+\item{container}{Container name (`character`) or actual container class
+object to read from}
 
 \item{progress_show}{show progress bar (`logical`) (default = TRUE)}
+
+\item{return_path_only}{logical if FALSE (default) tries to read the data.
+If TRUE returns only the downloaded file path}
 
 \item{...}{Additional arguments passed to the respective reader functions:
 - For `.parquet` files: Passed to `arrow::read_parquet()`.
@@ -28,7 +33,8 @@ and file extension, such as `.parquet`.}
 - For `.json` files: Passed to `jsonlite::read_json()`.
 - For `.csv` files: Passed to `readr::read_csv()`.
 - For `.xls` files: Passed to `readxl::read_xls()`.
-- For `.xlsx` files: Passed to `readxl::read_xlsx()`.}
+- For `.xlsx` files: Passed to `readxl::read_xlsx()`.
+- For `.rds` files: Passed to `readr::read_rds()`.}
 }
 \value{
 Data frame.
@@ -46,6 +52,7 @@ Function parsing is done based on file type:
 * Excel: [readxl::read_excel()]
 * GeoJSON: [sf::st_read()]
 * JSON: [jsonlite::read_json()]
+* rds: [readr::read_rds()]
 }
 \examples{
 df <- blob_read(name = "ds-aa-eth-drought/exploration/eth_admpop_2023.xlsx",
