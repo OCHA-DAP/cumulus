@@ -72,18 +72,42 @@ azure_endpoint_url <- function(
 
 #' @return SAS key based on stage
 
-get_sas_key <- function(stage,key_syntax_v = 2) {
+get_sas_key <- function(
+    stage,
+    key_syntax_v = 3,
+    write_access = TRUE) {
   if(key_syntax_v == 1){
     key <- switch(stage,
-      dev = Sys.getenv("DSCI_AZ_SAS_DEV"),
-      prod = Sys.getenv("DSCI_AZ_SAS_PROD")
+                  dev = Sys.getenv("DSCI_AZ_SAS_DEV"),
+                  prod = Sys.getenv("DSCI_AZ_SAS_PROD")
     )
   }
   if(key_syntax_v==2){
-   key <-  switch(stage,
-           dev = Sys.getenv("DS_AZ_BLOB_DEV_SAS"),
-           prod = Sys.getenv("DS_AZ_BLOB_PROD_SAS_WRITE")
+    key <-  switch(stage,
+                   dev = Sys.getenv("DS_AZ_BLOB_DEV_SAS"),
+                   prod = Sys.getenv("DS_AZ_BLOB_PROD_SAS_WRITE")
     )
+  }
+  if(key_syntax_v==3){
+    if(!write_access){
+      key <-  switch(stage,
+                     dev = Sys.getenv("DSCI_AZ_BLOB_DEV_SAS"),
+                     prod = Sys.getenv("DSCI_AZ_BLOB_PROD_SAS")
+      )
+    }
+    if(write_access){
+      if(stage=="dev"){
+        key <- Sys.getenv("DSCI_AZ_BLOB_DEV_SAS_WRITE")
+      }
+      if(stage == "prod")
+        key <- Sys.getenv("DSCI_AZ_BLOB_PROD_SAS_WRITE")
+      assertthat::assert_that(
+        (key!=""),
+        msg = "No write access to production blob storage. Please set the DSCI_AZ_BLOB_PROD_SAS_WRITE environment variable."
+      )
+    }
+
+
   }
   return(key)
 
