@@ -7,7 +7,7 @@ Convenience function get SAS key based on stage.
 TODO: will eventually creat some credential registration step to make this
 more flexible, but this will work well internally for now}
 \usage{
-get_sas_key(stage, key_syntax_v = 2)
+get_sas_key(stage, key_syntax_v = 3, write_access)
 }
 \arguments{
 \item{stage}{Store to access, either `prod` (default) or `dev`. `dev`}
