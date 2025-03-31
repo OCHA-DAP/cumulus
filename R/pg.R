@@ -1,8 +1,8 @@
 #' pg_creds
 #'
 #' @param stage db to access, either `prod` (default) or `dev`. `dev`
-#' @param key_syntax_v `integer` 1 or 2 (default). 2 is the current env var
-#'   naming status
+#' @param key_syntax_v `integer` 1, 2, or 3 (default). 3 is the latest env var
+#'   naming status. 1 & 2 will be deprecated.
 #' @param write_access `logical` indicating if write access is needed
 #'   default=TRUE
 #'
@@ -10,32 +10,39 @@
 
 pg_creds <- function(
     stage = "prod",
-    key_syntax_v = 2,
-    write_access = TRUE
+    key_syntax_v = 3,
+    write_access = FALSE
     ) {
   stage_upper = toupper(stage)
+  cred_prefix <- switch(key_syntax_v,
+                        `1` = "AZURE",
+                        `2` = "DS_AZ_DB",
+                        `3` = "DSCI_AZ_DB"
+  )
+
   if(key_syntax_v == 1){
     l_creds <- list(
-      user = "AZURE_DB_USER_ADMIN",
-      host = "AZURE_{stage_upper}_DB_HOST",
-      password = "AZURE_{stage_upper}_DB_PW",
+      user = "{cred_prefix}_DB_USER_ADMIN",
+      host = "{cred_prefix}_{stage_upper}_DB_HOST",
+      password = "{cred_prefix}_{stage_upper}_DB_PW",
       port = 5432,
       dbname = "postgres"
     )
 
   }
-  if(key_syntax_v==2){
+  if(key_syntax_v!=1){
     l_creds <- list(
-      user = "DS_AZ_DB_{stage_upper}_UID_WRITE",
-      host = "DS_AZ_DB_{stage_upper}_HOST",
-      password = "DS_AZ_DB_{stage_upper}_PW_WRITE",
+      user = "{cred_prefix}_{stage_upper}_UID_WRITE",
+      host = "{cred_prefix}_{stage_upper}_HOST",
+      password = "{cred_prefix}_{stage_upper}_PW_WRITE",
       port = 5432,
       dbname = "postgres"
     )
-  }
-  if(!write_access){
-    l_creds$user <-"DS_AZ_DB_{stage_upper}_UID"
-    l_creds$password <-"DS_AZ_DB_{stage_upper}_PW"
+    if(!write_access){
+      l_creds$user <- "{cred_prefix}_{stage_upper}_UID"
+      l_creds$password <-"{cred_prefix}_{stage_upper}_PW"
+    }
+
   }
 
   purrr::map(l_creds,\(item){glue::glue(item)})
@@ -47,7 +54,7 @@ pg_creds <- function(
 #' @param key_syntax_v `integer` 1 or 2 (default). 2 is the current env var
 #'   naming status
 #' @param write_access `logical` indicating if write access is needed
-#'   default=TRUE
+#'   default=FALSE
 #'
 #' @return `PqConnection` object
 #' @export
@@ -59,8 +66,8 @@ pg_creds <- function(
 #' }
 pg_con <- function(
     stage="prod",
-    key_syntax_v=2,
-    write = TRUE
+    key_syntax_v=3,
+    write = FALSE
 ){
 
   creds <- pg_creds(
