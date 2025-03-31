@@ -4,7 +4,7 @@
 \alias{pg_con}
 \title{pg_con - connect to postgres DB. Either `prod` or `dev` stage}
 \usage{
-pg_con(stage = "prod", key_syntax_v = 2, write = TRUE)
+pg_con(stage = "prod", key_syntax_v = 3, write = FALSE)
 }
 \arguments{
 \item{stage}{db to access, either `prod` (default) or `dev`. `dev`}
@@ -13,7 +13,7 @@ pg_con(stage = "prod", key_syntax_v = 2, write = TRUE)
 naming status}
 
 \item{write_access}{`logical` indicating if write access is needed
-default=TRUE}
+default=FALSE}
 }
 \value{
 `PqConnection` object

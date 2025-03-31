@@ -4,13 +4,13 @@
 \alias{pg_creds}
 \title{pg_creds}
 \usage{
-pg_creds(stage = "prod", key_syntax_v = 2, write_access = TRUE)
+pg_creds(stage = "prod", key_syntax_v = 3, write_access = FALSE)
 }
 \arguments{
 \item{stage}{db to access, either `prod` (default) or `dev`. `dev`}
 
-\item{key_syntax_v}{`integer` 1 or 2 (default). 2 is the current env var
-naming status}
+\item{key_syntax_v}{`integer` 1, 2, or 3 (default). 3 is the latest env var
+naming status. 1 & 2 will be deprecated.}
 
 \item{write_access}{`logical` indicating if write access is needed
 default=TRUE}
