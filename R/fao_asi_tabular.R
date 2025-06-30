@@ -9,6 +9,7 @@
 #'
 #' @examples
 #' df_syria <- fao_asi_adm1_tabular("SYR")
+
 fao_asi_adm1_tabular <- function(iso3){
   iso3_upper <- toupper(iso3)
     readr::read_csv(
