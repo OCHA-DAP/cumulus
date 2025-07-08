@@ -45,6 +45,7 @@ pg_creds <- function(
 
   }
 
+
   purrr::map(l_creds,\(item){glue::glue(item)})
 }
 
@@ -61,8 +62,10 @@ pg_creds <- function(
 #' @examples \dontrun{
 #' library(cumulus)
 #' con <-  pg_con() # prod
+#' DBI::dbListTables(con)
 #' # connect to dev instead
 #' con_dev <- pg_con(stage="dev")
+#' DBI::dbListTables(con_dev)
 #' }
 pg_con <- function(
     stage="prod",

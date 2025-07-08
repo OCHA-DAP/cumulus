@@ -25,7 +25,9 @@ pg_con - connect to postgres DB. Either `prod` or `dev` stage
 \dontrun{
 library(cumulus)
 con <-  pg_con() # prod
+DBI::dbListTables(con)
 # connect to dev instead
 con_dev <- pg_con(stage="dev")
+DBI::dbListTables(con_dev)
 }
 }
