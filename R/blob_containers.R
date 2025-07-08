@@ -6,6 +6,7 @@
 #' @param sas Shared access signature key to access the storage account or
 #'    blob (defaults to NULL) and is automatically set based on stage based on
 #'    our current SAS key nomenclature
+#' @param write_access `logical` indicating whether to use the write access SAS key
 #' @param service Service to access, either `blob` (default) or `file.`
 #' @return list of blob container class objects
 #' @examples
@@ -27,11 +28,12 @@
 blob_containers <- function(
     stage = c("dev", "prod"),
     sas = NULL,
+    write_access = TRUE,
     service = c("blob", "file")) {
   stage <- rlang::arg_match(stage)
 
   if (is.null(sas)) {
-    sas <- get_sas_key(stage)
+    sas <- get_sas_key(stage, write_access = write_access)
   }
   ep_url <- azure_endpoint_url(
     stage = stage,
