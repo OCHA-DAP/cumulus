@@ -7,6 +7,7 @@
 blob_containers(
   stage = c("dev", "prod"),
   sas = NULL,
+  write_access = TRUE,
   service = c("blob", "file")
 )
 }
@@ -16,6 +17,8 @@ blob_containers(
 \item{sas}{Shared access signature key to access the storage account or
 blob (defaults to NULL) and is automatically set based on stage based on
 our current SAS key nomenclature}
+
+\item{write_access}{`logical` indicating whether to use the write access SAS key}
 
 \item{service}{Service to access, either `blob` (default) or `file.`}
 }
