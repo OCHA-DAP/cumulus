@@ -78,6 +78,8 @@ get_sas_key <- function(
     stage,
     key_syntax_v = 3,
     write_access = TRUE) {
+
+  stage_upper <- toupper(stage)
   if(key_syntax_v == 1){
     key <- switch(stage,
                   dev = Sys.getenv("DSCI_AZ_SAS_DEV"),
@@ -92,17 +94,12 @@ get_sas_key <- function(
   }
   if(key_syntax_v==3){
     if(!write_access){
-      key <-  switch(stage,
-                     dev = Sys.getenv("DSCI_AZ_BLOB_DEV_SAS"),
-                     prod = Sys.getenv("DSCI_AZ_BLOB_PROD_SAS")
-      )
+      key <- Sys.getenv(glue::glue("DSCI_AZ_BLOB_{stage_upper}_SAS"))
     }
+
     if(write_access){
-      if(stage=="dev"){
-        key <- Sys.getenv("DSCI_AZ_BLOB_DEV_SAS_WRITE")
-      }
-      if(stage == "prod")
-        key <- Sys.getenv("DSCI_AZ_BLOB_PROD_SAS_WRITE")
+      key <- Sys.getenv(glue::glue("DSCI_AZ_BLOB_{stage_upper}_SAS_WRITE"))
+
       assertthat::assert_that(
         (key!=""),
         msg = "No write access to production blob storage. Please set the DSCI_AZ_BLOB_PROD_SAS_WRITE environment variable."
