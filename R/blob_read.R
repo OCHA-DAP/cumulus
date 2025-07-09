@@ -22,6 +22,7 @@
 #' @param progress_show show progress bar (`logical`) (default = TRUE)
 #' @param return_path_only  logical if FALSE (default) tries to read the data.
 #'   If TRUE returns only the downloaded file path
+#' @param write_access `logical` indicating whether to use the write access SAS key (default = FALSE)
 #' @param ... Additional arguments passed to the respective reader functions:
 #'   - For `.parquet` files: Passed to `arrow::read_parquet()`.
 #'   - For `.geojson` files: Passed to `sf::st_read()`.
@@ -33,17 +34,18 @@
 #'
 #' @returns Data frame.
 #' @examples
-#' df <- blob_read(name = "ds-aa-eth-drought/exploration/eth_admpop_2023.xlsx",
-#'                 stage = "dev",
-#'                 container = "projects",
-#'                 progress_show = TRUE
-#'                 )
+#' df <- blob_read(
+#'     name = "ds-aa-eth-drought/exploration/eth_admpop_2023.xlsx",
+#'     stage = "dev",
+#'     container = "projects",
+#'     progress_show = TRUE
+#' )
 #'
 #' @export
-blob_read <- function(name, stage = c("dev", "prod"), container="projects", progress_show = TRUE, return_path_only = FALSE, ...) {
+blob_read <- function(name, stage = c("dev", "prod"), container = "projects", progress_show = TRUE, return_path_only = FALSE, write_access = FALSE, ...) {
   stage <- rlang::arg_match(stage)
-  if(inherits(container, "character")){
-    container <- blob_containers(stage = stage)[[container]]
+  if (inherits(container, "character")) {
+    container <- blob_containers(stage = stage, write_access = write_access)[[container]]
   }
 
   fileext <- tools::file_ext(name)
@@ -57,23 +59,21 @@ blob_read <- function(name, stage = c("dev", "prod"), container="projects", prog
     src = name,
     dest = tf
   )
-  if(!return_path_only){
-  ret <- switch(fileext,
-         parquet = arrow::read_parquet(tf, ...),
-         geojson = sf::st_read(tf, quiet = TRUE,....),
-         json = dplyr::as_tibble(jsonlite::read_json(tf, simplifyVector = TRUE),..),
-         csv = readr::read_csv(tf, col_types = readr::cols(), guess_max = 10000,...),
-         xls = readxl::read_xls(tf, col_types = "guess",...),
-         xlsx = readxl::read_xlsx(tf, col_types = "guess", ...),
-         rds = readr::read_rds(tf, ...)
-  )
+  if (!return_path_only) {
+    ret <- switch(fileext,
+                  parquet = arrow::read_parquet(tf, ...),
+                  geojson = sf::st_read(tf, quiet = TRUE, ...),
+                  json = dplyr::as_tibble(jsonlite::read_json(tf, simplifyVector = TRUE), ...),
+                  csv = readr::read_csv(tf, col_types = readr::cols(), guess_max = 10000, ...),
+                  xls = readxl::read_xls(tf, col_types = "guess", ...),
+                  xlsx = readxl::read_xlsx(tf, col_types = "guess", ...),
+                  rds = readr::read_rds(tf, ...)
+    )
   }
-  if(return_path_only){
+  if (return_path_only) {
     ret <- tf
   }
   ret
-
-
 }
 
 # will add some utility funcs to read in very specific files that are global
@@ -87,11 +87,10 @@ blob_read <- function(name, stage = c("dev", "prod"), container="projects", prog
 #' @examples
 #' library(cumulus)
 #' blob_load_admin_lookup()
-blob_load_admin_lookup <- function(){
+blob_load_admin_lookup <- function() {
   blob_read(
     name = "admin_lookup.parquet",
     stage = "dev",
     container = "polygon"
   )
 }
-

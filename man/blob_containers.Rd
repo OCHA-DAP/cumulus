@@ -7,7 +7,7 @@
 blob_containers(
   stage = c("dev", "prod"),
   sas = NULL,
-  write_access = TRUE,
+  write_access = FALSE,
   service = c("blob", "file")
 )
 }
@@ -18,7 +18,7 @@ blob_containers(
 blob (defaults to NULL) and is automatically set based on stage based on
 our current SAS key nomenclature}
 
-\item{write_access}{`logical` indicating whether to use the write access SAS key}
+\item{write_access}{`logical` indicating whether to use the write access SAS key (default = FALSE)}
 
 \item{service}{Service to access, either `blob` (default) or `file.`}
 }
@@ -33,15 +33,15 @@ Create endpoint URL to access Azure blob or file storage on either the
 # load project containers
 containers <- blob_containers()
 AzureStor::list_blobs(
-  container = containers$projects,
-  dir = "ds-contingency-pak-floods"
+    container = containers$projects,
+    dir = "ds-contingency-pak-floods"
 )
 
 # You can also list as many containers as you want.
 containers <- blob_containers()
 
 AzureStor::list_blobs(
-  container = containers$global,
-  dir = "raster/cogs"
+    container = containers$global,
+    dir = "raster/cogs"
 )
 }
