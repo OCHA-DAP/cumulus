@@ -10,6 +10,7 @@ blob_read(
   container = "projects",
   progress_show = TRUE,
   return_path_only = FALSE,
+  write_access = FALSE,
   ...
 )
 }
@@ -26,6 +27,8 @@ object to read from}
 
 \item{return_path_only}{logical if FALSE (default) tries to read the data.
 If TRUE returns only the downloaded file path}
+
+\item{write_access}{`logical` indicating whether to use the write access SAS key (default = FALSE)}
 
 \item{...}{Additional arguments passed to the respective reader functions:
 - For `.parquet` files: Passed to `arrow::read_parquet()`.
@@ -55,10 +58,11 @@ Function parsing is done based on file type:
 * rds: [readr::read_rds()]
 }
 \examples{
-df <- blob_read(name = "ds-aa-eth-drought/exploration/eth_admpop_2023.xlsx",
-                stage = "dev",
-                container = "projects",
-                progress_show = TRUE
-                )
+df <- blob_read(
+    name = "ds-aa-eth-drought/exploration/eth_admpop_2023.xlsx",
+    stage = "dev",
+    container = "projects",
+    progress_show = TRUE
+)
 
 }

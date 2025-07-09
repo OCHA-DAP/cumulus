@@ -6,29 +6,29 @@
 #' @param sas Shared access signature key to access the storage account or
 #'    blob (defaults to NULL) and is automatically set based on stage based on
 #'    our current SAS key nomenclature
-#' @param write_access `logical` indicating whether to use the write access SAS key
+#' @param write_access `logical` indicating whether to use the write access SAS key (default = FALSE)
 #' @param service Service to access, either `blob` (default) or `file.`
 #' @return list of blob container class objects
 #' @examples
 #' # load project containers
 #' containers <- blob_containers()
 #' AzureStor::list_blobs(
-#'   container = containers$projects,
-#'   dir = "ds-contingency-pak-floods"
+#'     container = containers$projects,
+#'     dir = "ds-contingency-pak-floods"
 #' )
 #'
 #' # You can also list as many containers as you want.
 #' containers <- blob_containers()
 #'
 #' AzureStor::list_blobs(
-#'   container = containers$global,
-#'   dir = "raster/cogs"
+#'     container = containers$global,
+#'     dir = "raster/cogs"
 #' )
 #' @export
 blob_containers <- function(
     stage = c("dev", "prod"),
     sas = NULL,
-    write_access = TRUE,
+    write_access = FALSE,
     service = c("blob", "file")) {
   stage <- rlang::arg_match(stage)
 
@@ -78,36 +78,32 @@ get_sas_key <- function(
     stage,
     key_syntax_v = 3,
     write_access = TRUE) {
-
   stage_upper <- toupper(stage)
-  if(key_syntax_v == 1){
+  if (key_syntax_v == 1) {
     key <- switch(stage,
                   dev = Sys.getenv("DSCI_AZ_SAS_DEV"),
                   prod = Sys.getenv("DSCI_AZ_SAS_PROD")
     )
   }
-  if(key_syntax_v==2){
-    key <-  switch(stage,
-                   dev = Sys.getenv("DS_AZ_BLOB_DEV_SAS"),
-                   prod = Sys.getenv("DS_AZ_BLOB_PROD_SAS_WRITE")
+  if (key_syntax_v == 2) {
+    key <- switch(stage,
+                  dev = Sys.getenv("DS_AZ_BLOB_DEV_SAS"),
+                  prod = Sys.getenv("DS_AZ_BLOB_PROD_SAS_WRITE")
     )
   }
-  if(key_syntax_v==3){
-    if(!write_access){
+  if (key_syntax_v == 3) {
+    if (!write_access) {
       key <- Sys.getenv(glue::glue("DSCI_AZ_BLOB_{stage_upper}_SAS"))
     }
 
-    if(write_access){
+    if (write_access) {
       key <- Sys.getenv(glue::glue("DSCI_AZ_BLOB_{stage_upper}_SAS_WRITE"))
 
       assertthat::assert_that(
-        (key!=""),
+        (key != ""),
         msg = "No write access to production blob storage. Please set the DSCI_AZ_BLOB_PROD_SAS_WRITE environment variable."
       )
     }
-
-
   }
   return(key)
-
 }
