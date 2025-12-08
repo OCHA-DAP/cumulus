@@ -58,7 +58,7 @@ seas5_aggregate_forecast <-  function(df,value= "mean",valid_months=c(3,4,5), by
 #'   connect to main by default
 #' @param iso3 `character` iso3 code for country
 #' @param adm_level `numeric` administrative level
-#' @param adm_name `character` admin name of interest
+#' @param adm_name `character` admin name of interest, if null (default) returns all admin names in that level and iso3
 #' @param convert_units `logical` should we convert from m/s to mm/month
 #'   default = TRUE
 #'
@@ -77,9 +77,11 @@ pg_load_seas5_historical <- function(
     con=NULL,
     iso3,
     adm_level,
-    adm_name,
+    adm_name = NULL,
     convert_units =TRUE
     ){
+  
+  iso3 = toupper(iso3)
 
   if(is.null(con)){
     con <- pg_con()
@@ -87,12 +89,19 @@ pg_load_seas5_historical <- function(
   df_lookup <- blob_load_admin_lookup() |>
     janitor::clean_names()
 
+
   df_lookup_filt <- df_lookup |>
     dplyr::filter(
       iso3 %in% {{iso3}},
-      !!rlang::sym(glue::glue("adm{adm_level}_name")) %in% adm_name,
       adm_level == {{adm_level}}
-    ) |>
+    )
+  if(!is.null(adm_name)){
+    df_lookup_filt <- df_lookup_filt |> 
+      dplyr::filter(
+        !!rlang::sym(glue::glue("adm{adm_level}_name")) %in% adm_name,
+      )
+  }
+  df_lookup_filt <- df_lookup_filt |> 
     dplyr::select(
       dplyr::matches("adm\\d"),-adm0_name,-adm0_pcode
     ) |>

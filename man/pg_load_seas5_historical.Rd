@@ -8,7 +8,7 @@ pg_load_seas5_historical(
   con = NULL,
   iso3,
   adm_level,
-  adm_name,
+  adm_name = NULL,
   convert_units = TRUE
 )
 }
@@ -20,7 +20,7 @@ connect to main by default}
 
 \item{adm_level}{`numeric` administrative level}
 
-\item{adm_name}{`character` admin name of interest}
+\item{adm_name}{`character` admin name of interest, if null (default) returns all admin names in that level and iso3}
 
 \item{convert_units}{`logical` should we convert from m/s to mm/month
 default = TRUE}

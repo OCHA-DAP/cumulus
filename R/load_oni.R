@@ -12,7 +12,7 @@
 #' load_oni()
 load_oni <-  function(show_col_types = TRUE){
   readr::read_table(
-    "https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/detrend.nino34.ascii.txt",
+    "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/detrend.nino34.ascii.txt",
     show_col_types = show_col_types
     )  |>
     janitor::clean_names() |>
