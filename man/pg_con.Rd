@@ -4,13 +4,16 @@
 \alias{pg_con}
 \title{pg_con - connect to postgres DB. Either `prod` or `dev` stage}
 \usage{
-pg_con(stage = "prod", key_syntax_v = 3, write = FALSE)
+pg_con(stage = "prod", key_syntax_v = 3, write = FALSE, db_name = "postgres")
 }
 \arguments{
 \item{stage}{db to access, either `prod` (default) or `dev`. `dev`}
 
 \item{key_syntax_v}{`integer` 1 or 2 (default). 2 is the current env var
 naming status}
+
+\item{db_name}{`character` name of data base to connect to
+default = postgres}
 
 \item{write_access}{`logical` indicating if write access is needed
 default=FALSE}

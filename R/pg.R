@@ -5,13 +5,16 @@
 #'   naming status. 1 & 2 will be deprecated.
 #' @param write_access `logical` indicating if write access is needed
 #'   default=TRUE
+#' @param db_name `character` name of data base to connect to
+#'   default = postgres
 #'
 #' @return list containing named env vars to use for authentication
 
 pg_creds <- function(
     stage = "prod",
     key_syntax_v = 3,
-    write_access = FALSE
+    write_access = FALSE,
+    db_name = "postgres"
     ) {
   stage_upper = toupper(stage)
   cred_prefix <- switch(key_syntax_v,
@@ -26,7 +29,7 @@ pg_creds <- function(
       host = "{cred_prefix}_{stage_upper}_DB_HOST",
       password = "{cred_prefix}_{stage_upper}_DB_PW",
       port = 5432,
-      dbname = "postgres"
+      dbname = db_name
     )
 
   }
@@ -36,7 +39,7 @@ pg_creds <- function(
       host = "{cred_prefix}_{stage_upper}_HOST",
       password = "{cred_prefix}_{stage_upper}_PW_WRITE",
       port = 5432,
-      dbname = "postgres"
+      dbname = db_name
     )
     if(!write_access){
       l_creds$user <- "{cred_prefix}_{stage_upper}_UID"
@@ -56,7 +59,8 @@ pg_creds <- function(
 #'   naming status
 #' @param write_access `logical` indicating if write access is needed
 #'   default=FALSE
-#'
+#' @param db_name `character` name of data base to connect to
+#'   default = postgres
 #' @return `PqConnection` object
 #' @export
 #' @examples \dontrun{
@@ -70,13 +74,15 @@ pg_creds <- function(
 pg_con <- function(
     stage="prod",
     key_syntax_v=3,
-    write = FALSE
+    write = FALSE,
+    db_name = "postgres"
 ){
 
   creds <- pg_creds(
     stage=stage,
     key_syntax_v = key_syntax_v,
-    write= write
+    write= write,
+    db_name = db_name
     )
 
   DBI::dbConnect(

@@ -4,7 +4,12 @@
 \alias{pg_creds}
 \title{pg_creds}
 \usage{
-pg_creds(stage = "prod", key_syntax_v = 3, write_access = FALSE)
+pg_creds(
+  stage = "prod",
+  key_syntax_v = 3,
+  write_access = FALSE,
+  db_name = "postgres"
+)
 }
 \arguments{
 \item{stage}{db to access, either `prod` (default) or `dev`. `dev`}
@@ -14,6 +19,9 @@ naming status. 1 & 2 will be deprecated.}
 
 \item{write_access}{`logical` indicating if write access is needed
 default=TRUE}
+
+\item{db_name}{`character` name of data base to connect to
+default = postgres}
 }
 \value{
 list containing named env vars to use for authentication
